@@ -9,6 +9,7 @@ from flask.ext.foundation import Foundation
 from raven.contrib.flask import Sentry
 
 from pygotham import factory, filters
+from pygotham.about import get_about_links
 from pygotham.events import get_current as get_current_event
 
 __all__ = ('create_app', 'route')
@@ -60,6 +61,10 @@ def create_app(settings_override=None):
     @app.context_processor
     def current_event():
         return {'current_event': get_current_event()}
+
+    @app.context_processor
+    def about_links():
+        return {'about_links': get_about_links()}
 
     app.jinja_env.filters['rst'] = filters.rst_to_html
 

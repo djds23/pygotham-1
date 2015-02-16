@@ -1,28 +1,15 @@
 """About PyGotham."""
 
-from flask import Blueprint
+from flask import Blueprint, render_template
 
-from pygotham.frontend import direct_to_template
+from pygotham.models import AboutPage
 
 __all__ = ('blueprint',)
 
 blueprint = Blueprint('about', __name__, url_prefix='/about')
 
-direct_to_template(
-    blueprint,
-    '/code-of-conduct',
-    template='about/code-of-conduct.html',
-    endpoint='code_of_conduct',
-)
-direct_to_template(
-    blueprint,
-    '/privacy-policy',
-    template='about/privacy-policy.html',
-    endpoint='privacy_policy',
-)
-direct_to_template(
-    blueprint,
-    '/faq',
-    template='about/faq.html',
-    endpoint='faq',
-)
+
+@blueprint.route('/<slug>')
+def rst_content(slug):
+    page = AboutPage.query.filter_by(slug=slug, active=True).first_or_404()
+    return render_template('about.html', page=page)
