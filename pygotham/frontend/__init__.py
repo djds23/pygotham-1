@@ -1,9 +1,12 @@
 """Frontend application."""
 
+from collections import defaultdict
 from functools import wraps
+import importlib
+import pkgutil
 import os
 
-from flask import render_template
+from flask import render_template, url_for
 from flask.ext.assets import Bundle, Environment
 from flask.ext.foundation import Foundation
 from raven.contrib.flask import Sentry
@@ -65,6 +68,34 @@ def create_app(settings_override=None):
     @app.context_processor
     def about_links():
         return {'about_links': get_about_links()}
+
+    @app.context_processor
+    def generate_navbar():
+        """Autodiscover links that should populate the site's navbar."""
+        # navbar_links is a dict of the form
+        # {section_name: {link_name: link_value, ...}, ...}
+        navbar_links = defaultdict(dict)
+
+        # First, autogenerate a list based on available routes
+        # Available routes are any that have a GET method and have all
+        # arguments (if any) provided default values
+        for rule in app.url_map.iter_rules():
+            section_name = rule.endpoint.split('.')[0]
+            get_allowed = 'get' in (method.lower() for method in rule.methods)
+            required_args = set(rule.arguments)
+            provided_args = set(getattr(rule.defaults, 'keys', lambda: [])())
+            missing_args = required_args.difference(provided_args)
+            if (get_allowed and not missing_args and
+                    section_name not in app.config['NAVBAR_EXCLUDES']):
+                rule_name = rule.endpoint.split('.')[1]
+                navbar_links[section_name][rule_name] = url_for(rule.endpoint)
+
+        # Find module-specific overrides and update the routes
+        for _, name, _ in pkgutil.iter_modules(__path__):
+            m = importlib.import_module('{}.{}'.format(__name__, name))
+            if hasattr(m, 'get_nav_links'):
+                navbar_links.update(m.get_nav_links())
+        return {'navbar': navbar_links}
 
     app.jinja_env.filters['rst'] = filters.rst_to_html
 

@@ -10,7 +10,15 @@ def bool_(key, default):
     return env.get(key, str(default)).lower() == 'true'
 
 
+def list_(key):
+    """Return a list of values parsed from a comma separated string."""
+    value = env.get(key)
+    if not value:
+        return []
+    return [item.strip() for item in value.split(',')]
+
 DEBUG = bool_('DEBUG', False)
+NAVBAR_EXCLUDES = list_('NAVBAR_EXCLUDES')
 SECRET_KEY = env.get('SECRET_KEY', DOES_NOT_EXIST)
 
 GOOGLE_ANALYTICS_PROFILE_ID = env.get('GOOGLE_ANALYTICS_PROFILE_ID')

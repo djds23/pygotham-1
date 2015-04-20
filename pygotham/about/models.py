@@ -9,7 +9,6 @@ __all__ = ('AboutPage',)
 
 
 class AboutPage(db.Model):
-
     """About page."""
 
     __tablename__ = 'about_pages'
