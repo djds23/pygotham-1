@@ -13,6 +13,9 @@
 
         <div class="row">
           {{ wtf.horizontal_field(form.name, placeholder='Title') }}
+          <small>
+            Got a Co-Presenter? <a href="mailto:organizers@pygotham.org" >Let us know!</a>
+          </small>
         </div>
         <div class="row">
           {{ wtf.horizontal_field(form.description, placeholder='Description') }}
@@ -21,22 +24,7 @@
           {{ wtf.horizontal_field(form.level, placeholder='Level') }}
         </div>
         <div class="row">
-          {{ wtf.horizontal_field(form.type, placeholder='Type') }}
-        </div>
-        <div class="row">
           {{ wtf.horizontal_field(form.duration, placeholder='Duration') }}
-        </div>
-        <div class="row">
-          {{ wtf.horizontal_field(form.abstract, placeholder='Abstract') }}
-        </div>
-        <div class="row">
-          {{ wtf.horizontal_field(form.objectives, placeholder='Objectives') }}
-        </div>
-        <div class="row">
-          {{ wtf.horizontal_field(form.target_audience, placeholder='Audience') }}
-        </div>
-        <div class="row">
-          {{ wtf.horizontal_field(form.outline, placeholder='Outline') }}
         </div>
         <div class="row">
           {{ wtf.horizontal_field(form.additional_requirements, placeholder='Additional Requirements') }}

@@ -15,7 +15,17 @@
         {{ talk.user }}
       </a>
     </h4>
-
+    {% for presenter in talk.co_presenters.all() %}
+      <h4>
+      {% if presenter.user %}
+        <a href="{{ url_for('speakers.profile', pk=presenter.user.id) }}">
+          {{ presenter.user }}
+        </a>
+      {% else %}
+          {{ presenter.name }}
+      {% endif %}
+      </h4>
+    {% endfor %}
     <dl>
       <dt>Audience level:
       <dd>{{ talk.level }}

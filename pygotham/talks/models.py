@@ -2,7 +2,7 @@
 
 from pygotham.core import db
 
-__all__ = ('Category', 'Duration', 'Talk')
+__all__ = ('Category', 'CoPresenter', 'Duration', 'Talk')
 
 
 class Category(db.Model):
@@ -66,11 +66,7 @@ class Talk(db.Model):
     duration = db.relationship('Duration')
     recording_release = db.Column(db.Boolean, nullable=True)
 
-    abstract = db.Column(db.Text)
     additional_requirements = db.Column(db.Text)
-    objectives = db.Column(db.Text)
-    outline = db.Column(db.Text)
-    target_audience = db.Column(db.Text)
 
     event_id = db.Column(
         db.Integer, db.ForeignKey('events.id'), nullable=False,
@@ -98,3 +94,20 @@ class Talk(db.Model):
     def is_accepted(self):
         """Return whether the instance is accepted."""
         return self.status == 'accepted'
+
+
+class CoPresenter(db.Model):
+
+    __tablename__ = 'copresenters'
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    name = db.Column(db.String(255), info={'label': 'Name'}, nullable=False)
+    email = db.Column(db.String(255), nullable=False)
+    twitter_handle = db.Column(db.String(255), nullable=True)
+
+    talk_id = db.Column(db.Integer, db.ForeignKey('talks.id'), nullable=False)
+    talk = db.relationship('Talk', backref=db.backref('co_presenters', lazy='dynamic'))
+
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    user = db.relationship('User', backref=db.backref('copresenters', lazy='dynamic'))

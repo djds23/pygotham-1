@@ -55,6 +55,11 @@ DurationModelView = model_view(
     CATEGORY,
 )
 
+CoPresenterModelView = model_view(
+    models.CoPresenter,
+    'CoPresenter',
+    CATEGORY,
+)
 
 talk_model_view = TalkModelView(
     models.Talk, db.session, 'Talks', CATEGORY, 'talks')
