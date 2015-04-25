@@ -34,36 +34,7 @@ class TalkSubmissionForm(ModelForm):
                 ),
             },
             'level': {'label': 'Experience Level'},
-            'type': {'label': 'Type'},
             'duration': {'label': 'Duration'},
-            'abstract': {
-                'label': 'Abstract',
-                'description': (
-                    'Detailed overview. Will be made public if your talk is '
-                    'accepted.'
-                ),
-            },
-            'objectives': {
-                'label': 'Objectives',
-                'description': (
-                    'What do you hope to accomplish with this talk?'
-                ),
-            },
-            'target_audience': {
-                'label': 'Target Audience',
-                'description': (
-                    'Who is the intended audience for your talk? (Be '
-                    'specific; "Python programmers" is not a good answer to '
-                    'this question.)'
-                ),
-            },
-            'outline': {
-                'label': 'Outline',
-                'description': (
-                    'Sections and key points of the talk meant to give the '
-                    'committee an overview.'
-                ),
-            },
             'additional_requirements': {'label': 'Additional Requirements'},
             'recording_release': {
                 'label': 'Recording Release',

@@ -1,4 +1,5 @@
 """Talks models."""
+from sqlalchemy.dialects.postgresql import JSON
 
 from pygotham.core import db
 
@@ -58,19 +59,11 @@ class Talk(db.Model):
         db.Enum('novice', 'intermediate', 'advanced', name='level'),
         nullable=False,
     )
-    type = db.Column(
-        db.Enum('talk', 'tutorial', name='type'),
-        nullable=False,
-    )
     duration_id = db.Column(db.ForeignKey('durations.id'), nullable=False)
     duration = db.relationship('Duration')
     recording_release = db.Column(db.Boolean, nullable=True)
 
-    abstract = db.Column(db.Text)
     additional_requirements = db.Column(db.Text)
-    objectives = db.Column(db.Text)
-    outline = db.Column(db.Text)
-    target_audience = db.Column(db.Text)
 
     event_id = db.Column(
         db.Integer, db.ForeignKey('events.id'), nullable=False,
@@ -98,3 +91,17 @@ class Talk(db.Model):
     def is_accepted(self):
         """Return whether the instance is accepted."""
         return self.status == 'accepted'
+
+
+class CoPresenter(db.Model):
+
+    __tablename__ = 'copresenters'
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    name = db.Column(db.String(255), info={'label': 'Name'}, nullable=True)
+    email = db.Column(db.String(255), nullable=True)
+    twitter_handle = db.Column(db.String(255), nullable=True)
+
+    talk_id = db.Column(db.Integer, db.ForeignKey('talks.id'), nullable=False)
+    talk = db.relationship('Talk', backref=db.backref('co_presenters', lazy='dynamic'))

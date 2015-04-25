@@ -57,6 +57,7 @@ class User(db.Model, UserMixin):
     current_login_ip = db.Column(db.String(100))
     login_count = db.Column(db.Integer)
     registered_at = db.Column(db.DateTime)
+    twitter_handle = db.Column(db.String(255), nullable=True)
 
     bio = db.Column(db.Text)
 

@@ -20,12 +20,14 @@ class ProfileForm(ModelForm):
 
     class Meta:
         model = User
-        only = ('name', 'email', 'bio')
+        only = ('name', 'email', 'bio', 'twitter_handle')
         field_args = {
             'name': {'label': 'Name'},
             'email': {
                 'label': 'Email',
                 'validators': (Email(), Unique(User.email)),
             },
-            'bio': {'label': 'Biography'},
+            'twitter_handle': {'label': 'Twitter'},
+            'bio': {'label': 'Biography'}
+
         }
