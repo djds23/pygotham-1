@@ -102,6 +102,7 @@ The last step is to create an event::
 
 
 In order to get JavaScript working locally, you must follow the `front end setup instructions here`_.
+
 Running the site locally
 ========================
 
