@@ -101,6 +101,7 @@ The last step is to create an event::
     Activate the event [n]: <y|n>
 
 
+In order to get JavaScript working locally, you must follow the `front end setup instructions here`_.
 Running the site locally
 ========================
 
@@ -125,3 +126,4 @@ management command.
 .. _pyenv: https://github.com/yyuu/pyenv
 .. _pyenv-virtualenvwrapper: https://github.com/yyuu/pyenv-virtualenvwrapper
 .. _virtualenvwrapper: https://virtualenvwrapper.rtfd.org
+.. _front end setup instructions here: pygotham/frontend/static/README.md
