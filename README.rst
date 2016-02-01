@@ -111,15 +111,11 @@ Requirements
 
 
 For SCSS:
-  - Install dependencies
-    - navigate to static directory at ``pygotham/frontend/static`` and run ``bundle install``
-
-  - Watch & compile changes by running the command
-    - ``bundle exec compass watch``
+  - Install Dependencies: navigate to static directory at ``pygotham/frontend/static`` and run ``bundle install``
+  - Watch & compile changes by running the command - ``bundle exec compass watch``
 
 For JavaScript:
-  - Install dependencies
-    - navigate to static directory at ``pygotham/frontend/static`` and run ``bower install``
+  - Install Dependencies: navigate to static directory at ``pygotham/frontend/static`` and run ``bower install``
 
 Running the site locally
 ========================
