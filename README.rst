@@ -112,14 +112,14 @@ Requirements
 
 For SCSS:
   - Install dependencies
-    - navigate to static directory at `pygotham/frontend/static` and run `bundle install`
+    - navigate to static directory at ``pygotham/frontend/static`` and run ``bundle install``
 
   - Watch & compile changes by running the command
-    - `bundle exec compass watch`
+    - ``bundle exec compass watch``
 
 For JavaScript:
   - Install dependencies
-    - navigate to static directory at `pygotham/frontend/static` and run `bower install`
+    - navigate to static directory at ``pygotham/frontend/static`` and run ``bower install``
 
 Running the site locally
 ========================
@@ -132,7 +132,7 @@ You should see the PyGotham site at::
 
     http://0.0.0.0:5000/<slug>/
 
-where ``<slug>>`` is the slug of the event created by the ``create_event``
+where ``<slug>`` is the slug of the event created by the ``create_event``
 management command.
 
 .. note:: If you're using Docker, Compose will take care of running the site
