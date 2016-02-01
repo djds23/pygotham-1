@@ -101,7 +101,25 @@ The last step is to create an event::
     Activate the event [n]: <y|n>
 
 
-In order to get JavaScript working locally, you must follow the `front end setup instructions here`_.
+
+Front-End Dependencites
+=======================
+Requirements
+
+- `Ruby 1.9+`_ with Bundler_
+- `Node.js`_ with bower_
+
+
+For SCSS:
+  - Install dependencies
+    - navigate to static directory at `pygotham/frontend/static` and run `bundle install`
+
+  - Watch & compile changes by running the command
+    - `bundle exec compass watch`
+
+For JavaScript:
+  - Install dependencies
+    - navigate to static directory at `pygotham/frontend/static` and run `bower install`
 
 Running the site locally
 ========================
@@ -127,4 +145,7 @@ management command.
 .. _pyenv: https://github.com/yyuu/pyenv
 .. _pyenv-virtualenvwrapper: https://github.com/yyuu/pyenv-virtualenvwrapper
 .. _virtualenvwrapper: https://virtualenvwrapper.rtfd.org
-.. _front end setup instructions here: pygotham/frontend/static/README.md
+.. _Node.js: http://nodejs.org
+.. _bower: http://bower.io
+.. _Bundler: http://bundler.io/
+.. _Ruby 1.9+: https://www.ruby-lang.org/
