@@ -104,7 +104,9 @@ The last step is to create an event::
 
 Front-End Dependencites
 =======================
-Requirements
+For those using docker, you can skip this part.
+
+Requirements:
 
 - `Ruby 1.9+`_ with Bundler_
 - `Node.js`_ with bower_
