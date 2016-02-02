@@ -65,3 +65,6 @@ class TalkSubmissionForm(ModelForm):
         }
 
     duration = QuerySelectField(query_factory=duration_query_factory)
+
+    #TODO: Add SpeakerInvite one to many form here
+    # @see https://wtforms-alchemy.readthedocs.org/en/latest/relationships.html#forms-with-relations
