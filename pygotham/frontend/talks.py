@@ -9,7 +9,7 @@ from flask_security import login_required
 
 from pygotham.core import db
 from pygotham.frontend import direct_to_template, route
-from pygotham.models import Day, Talk
+from pygotham.models import Day, Talk, Speaker
 
 __all__ = ('blueprint', 'get_nav_links')
 
@@ -98,6 +98,13 @@ def proposal(pk=None):
         form.populate_obj(talk)
 
         db.session.add(talk)
+        db.session.commit()
+
+        speaker = Speaker(
+            user_id=current_user.id,
+            talk_id=talk.id,
+        )
+        db.session.add(speaker)
         db.session.commit()
 
         flash('Your proposal has been submitted.', 'success')

@@ -1,6 +1,7 @@
 """Talks models."""
 
 from slugify import slugify
+from sqlalchemy_utils import ArrowType
 
 from pygotham.core import db
 from pygotham.events.query import EventQuery
@@ -107,3 +108,30 @@ class Talk(db.Model):
     def slug(self):
         """Return a slug for the instance."""
         return slugify(self.name, max_length=25)
+
+
+class Speaker(db.Model):
+
+    """Speaker, represents the intent to give a talk"""
+
+    __tablename__ = 'speakers'
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    talk_id = db.Column(
+        db.Integer, db.ForeignKey('talks.id'), nullable=False,
+    )
+    talk = db.relationship(
+        'Talk', backref=db.backref('talks', lazy='dynamic'),
+    )
+
+    user_id = db.Column(
+        db.Integer, db.ForeignKey('users.id'), nullable=False
+    )
+    user = db.relationship(
+        'User', backref=db.backref('talks', lazy='dynamic')
+    )
+
+    recording_release = db.Column(db.Boolean, nullable=True)
+    confirmed_ts = db.Column(ArrowType, nullable=True)
+    declined_ts = db.Column(ArrowType, nullable=True)
