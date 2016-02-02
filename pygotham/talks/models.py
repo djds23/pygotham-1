@@ -129,7 +129,7 @@ class Speaker(db.Model):
         db.Integer, db.ForeignKey('users.id'), nullable=False
     )
     user = db.relationship(
-        'User', backref=db.backref('talks', lazy='dynamic')
+        'User', backref=db.backref('users', lazy='dynamic')
     )
 
     recording_release = db.Column(db.Boolean, nullable=True)
