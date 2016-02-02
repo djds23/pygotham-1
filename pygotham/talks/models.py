@@ -6,7 +6,7 @@ from sqlalchemy_utils import ArrowType
 from pygotham.core import db
 from pygotham.events.query import EventQuery
 
-__all__ = ('Category', 'Duration', 'Talk', 'Speaker')
+__all__ = ('Category', 'Duration', 'Speaker', 'Talk')
 
 
 class Category(db.Model):
@@ -135,3 +135,22 @@ class Speaker(db.Model):
     recording_release = db.Column(db.Boolean, nullable=True)
     confirmed_ts = db.Column(ArrowType, nullable=True)
     declined_ts = db.Column(ArrowType, nullable=True)
+
+
+class SpeakerInvite(db.Model):
+
+    """SpeakerInvite, an invite from a user to co present a talk"""
+
+    __tablename__ = 'speaker_invites'
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    talk_id = db.Column(
+        db.Integer, db.ForeignKey('talks.id'), nullable=False,
+    )
+    talk = db.relationship(
+        'Talk', backref=db.backref('talk', lazy='dynamic'),
+    )
+
+    claim_token = db.Column(db.String(255), nullable=False)
+    invited_email = db.Column(db.String(255), nullable=False)
