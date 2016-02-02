@@ -6,7 +6,7 @@ from sqlalchemy_utils import ArrowType
 from pygotham.core import db
 from pygotham.events.query import EventQuery
 
-__all__ = ('Category', 'Duration', 'Talk')
+__all__ = ('Category', 'Duration', 'Talk', 'Speaker')
 
 
 class Category(db.Model):
