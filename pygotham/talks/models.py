@@ -1,6 +1,8 @@
 """Talks models."""
+from uuid import uuid4
 
 from slugify import slugify
+from sqlalchemy import event
 from sqlalchemy_utils import ArrowType
 
 from pygotham.core import db
@@ -154,3 +156,9 @@ class SpeakerInvite(db.Model):
 
     claim_token = db.Column(db.String(255), nullable=False)
     invited_email = db.Column(db.String(255), nullable=False)
+
+
+@event.listens_for(SpeakerInvite, 'before_insert')
+def set_claim_token(mapper, connection, target):
+    if target.claim_token is None:
+        target.claim_token = uuid4()

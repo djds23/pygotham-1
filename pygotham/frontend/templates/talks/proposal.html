@@ -19,6 +19,9 @@
         {{ wtf.horizontal_field(form.duration, placeholder='Duration') }}
         {{ wtf.horizontal_field(form.abstract, placeholder='Abstract') }}
         {{ wtf.horizontal_field(form.outline, placeholder='Outline') }}
+        {% for invite_form in form.speaker_invites %}
+          {{ wtf.horizontal_field(invite_form.invited_email, placeholder='your.partner@in.crime') }}
+        {% endfor %}
         {{ wtf.horizontal_field(form.additional_requirements, placeholder='Additional Requirements') }}
         {{ wtf.horizontal_field(form.recording_release, placeholder='Recording Release') }}
         <small>

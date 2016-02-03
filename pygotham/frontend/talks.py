@@ -10,6 +10,7 @@ from flask_security import login_required
 from pygotham.core import db
 from pygotham.frontend import direct_to_template, route
 from pygotham.models import Day, Talk, Speaker
+from pygotham.talks.models import SpeakerInvite
 
 __all__ = ('blueprint', 'get_nav_links')
 
@@ -93,25 +94,29 @@ def proposal(pk=None):
             type='talk',
         )
 
-    form = TalkSubmissionForm(obj=talk)
-    if form.validate_on_submit():
-        form.populate_obj(talk)
+    talk_form = TalkSubmissionForm(obj=talk)
 
-        db.session.add(talk)
-        db.session.commit()
-
+    if talk_form.validate_on_submit():
+        talk_form.populate_obj(talk)
         speaker = Speaker(
-            user_id=current_user.id,
-            talk_id=talk.id,
+            user=current_user,
+            talk=talk,
         )
+        db.session.add(talk)
         db.session.add(speaker)
+
+        for invite_form in talk_form.speaker_invites:
+            if invite_form.validate(invite_form):
+                speaker_invite = SpeakerInvite(talk=talk, **invite_form.data)
+                db.session.add(speaker_invite)
+
         db.session.commit()
 
         flash('Your proposal has been submitted.', 'success')
 
         return redirect(url_for('profile.dashboard'))
 
-    return render_template('talks/proposal.html', form=form)
+    return render_template('talks/proposal.html', form=talk_form)
 
 
 direct_to_template(

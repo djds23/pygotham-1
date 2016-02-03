@@ -1,11 +1,11 @@
 """Talks forms."""
-
+from wtforms import FieldList
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from flask_wtf import Form
 from wtforms.validators import Optional
-from wtforms_alchemy import model_form_factory
+from wtforms_alchemy import model_form_factory, ModelFormField
 
-from pygotham.talks.models import Duration, Talk
+from pygotham.talks.models import Duration, SpeakerInvite, Talk
 
 __all__ = ('TalkSubmissionForm',)
 
@@ -15,6 +15,21 @@ ModelForm = model_form_factory(Form)
 def duration_query_factory():
     """Return available :class:`~pygotha.models.Duration` instances."""
     return Duration.query.filter(Duration.inactive == False)
+
+
+class SpeakerInvitesForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, csrf_enabled=False, **kwargs)
+
+    class Meta:
+        model = SpeakerInvite
+        exclude = ('claim_token',)
+        field_args = {
+            'invited_email': {
+                'label': 'Co-Presenter\'s Email'
+            },
+        }
 
 
 class TalkSubmissionForm(ModelForm):
@@ -66,5 +81,7 @@ class TalkSubmissionForm(ModelForm):
 
     duration = QuerySelectField(query_factory=duration_query_factory)
 
-    #TODO: Add SpeakerInvite one to many form here
-    # @see https://wtforms-alchemy.readthedocs.org/en/latest/relationships.html#forms-with-relations
+    speaker_invites = FieldList(
+        ModelFormField(SpeakerInvitesForm),
+        min_entries=1
+    )
