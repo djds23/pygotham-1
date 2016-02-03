@@ -19,9 +19,6 @@ def duration_query_factory():
 
 class SpeakerInvitesForm(ModelForm):
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, csrf_enabled=False, **kwargs)
-
     class Meta:
         model = SpeakerInvite
         exclude = ('claim_token',)
