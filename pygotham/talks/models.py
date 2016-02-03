@@ -161,4 +161,4 @@ class SpeakerInvite(db.Model):
 @event.listens_for(SpeakerInvite, 'before_insert')
 def set_claim_token(mapper, connection, target):
     if target.claim_token is None:
-        target.claim_token = uuid4()
+        target.claim_token = str(uuid4())
