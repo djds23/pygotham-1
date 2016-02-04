@@ -46,6 +46,56 @@ class Duration(db.Model):
         return self.name
 
 
+class Speaker(db.Model):
+
+    """Speaker, represents the intent to give a talk"""
+
+    __tablename__ = 'speakers'
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    talk_id = db.Column(
+        db.Integer, db.ForeignKey('talks.id'), nullable=False,)
+    talk = db.relationship(
+        'Talk', backref=db.backref('speakers', lazy='dynamic'),)
+
+    user_id = db.Column(
+        db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user = db.relationship(
+        'User', backref=db.backref('speakers', lazy='dynamic'))
+
+    recording_release = db.Column(db.Boolean, nullable=True)
+    confirmed_ts = db.Column(ArrowType, nullable=True)
+    declined_ts = db.Column(ArrowType, nullable=True)
+
+user_talks = db.Table('speakers', Speaker.metadata, autoload=True)
+
+
+class SpeakerInvite(db.Model):
+
+    """SpeakerInvite, an invite from a user to co present a talk"""
+
+    __tablename__ = 'speaker_invites'
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    talk_id = db.Column(
+        db.Integer, db.ForeignKey('talks.id'), nullable=False,
+    )
+    talk = db.relationship(
+        'Talk', backref=db.backref('speaker_invites', lazy='dynamic'),
+    )
+
+    claim_token = db.Column(db.String(255), nullable=False)
+    invited_email = db.Column(db.String(255), nullable=False)
+
+
+@event.listens_for(SpeakerInvite, 'before_insert')
+def set_claim_token(mapper, connection, target):
+    if target.claim_token is None:
+        target.claim_token = str(uuid4())
+
+
 class Talk(db.Model):
 
     """Talk."""
@@ -93,7 +143,10 @@ class Talk(db.Model):
     )
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    user = db.relationship('User', backref=db.backref('talks', lazy='dynamic'))
+    speaking_users = db.relationship(
+        'User',
+        secondary=user_talks
+    )
 
     video_url = db.Column(db.String(255))
 
@@ -110,55 +163,3 @@ class Talk(db.Model):
     def slug(self):
         """Return a slug for the instance."""
         return slugify(self.name, max_length=25)
-
-
-class Speaker(db.Model):
-
-    """Speaker, represents the intent to give a talk"""
-
-    __tablename__ = 'speakers'
-
-    id = db.Column(db.Integer, primary_key=True)
-
-    talk_id = db.Column(
-        db.Integer, db.ForeignKey('talks.id'), nullable=False,
-    )
-    talk = db.relationship(
-        'Talk', backref=db.backref('talks', lazy='dynamic'),
-    )
-
-    user_id = db.Column(
-        db.Integer, db.ForeignKey('users.id'), nullable=False
-    )
-    user = db.relationship(
-        'User', backref=db.backref('users', lazy='dynamic')
-    )
-
-    recording_release = db.Column(db.Boolean, nullable=True)
-    confirmed_ts = db.Column(ArrowType, nullable=True)
-    declined_ts = db.Column(ArrowType, nullable=True)
-
-
-class SpeakerInvite(db.Model):
-
-    """SpeakerInvite, an invite from a user to co present a talk"""
-
-    __tablename__ = 'speaker_invites'
-
-    id = db.Column(db.Integer, primary_key=True)
-
-    talk_id = db.Column(
-        db.Integer, db.ForeignKey('talks.id'), nullable=False,
-    )
-    talk = db.relationship(
-        'Talk', backref=db.backref('talk', lazy='dynamic'),
-    )
-
-    claim_token = db.Column(db.String(255), nullable=False)
-    invited_email = db.Column(db.String(255), nullable=False)
-
-
-@event.listens_for(SpeakerInvite, 'before_insert')
-def set_claim_token(mapper, connection, target):
-    if target.claim_token is None:
-        target.claim_token = str(uuid4())

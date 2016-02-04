@@ -10,7 +10,7 @@ from sqlalchemy import event
 
 from pygotham.core import db
 from pygotham.events.models import Volunteer
-from pygotham.talks.models import Talk
+from pygotham.talks.models import Talk, Speaker
 
 __all__ = ('Role', 'User')
 
@@ -19,6 +19,8 @@ roles_users = db.Table(
     db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
     db.Column('role_id', db.Integer, db.ForeignKey('roles.id')),
 )
+
+user_talks = db.Table('speakers', Speaker.metadata, autoload=True)
 
 
 class Role(db.Model, RoleMixin):
@@ -72,6 +74,12 @@ class User(db.Model, UserMixin):
         'Role',
         secondary=roles_users,
         backref=db.backref('users', lazy='dynamic'),
+    )
+
+    talks = db.relationship(
+        'Talk',
+        secondary=user_talks,
+        backref=db.backref('users', lazy='dynamic')
     )
 
     def __str__(self):
