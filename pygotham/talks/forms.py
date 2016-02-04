@@ -2,7 +2,7 @@
 from wtforms import FieldList
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from flask_wtf import Form
-from wtforms.validators import Optional
+from wtforms.validators import Optional, Email
 from wtforms_alchemy import model_form_factory, ModelFormField
 
 from pygotham.talks.models import Duration, SpeakerInvite, Talk
@@ -13,7 +13,7 @@ ModelForm = model_form_factory(Form)
 
 
 def duration_query_factory():
-    """Return available :class:`~pygotha.models.Duration` instances."""
+    """Return available :class:`~pygotham.models.Duration` instances."""
     return Duration.query.filter(Duration.inactive == False)
 
 
@@ -24,7 +24,8 @@ class SpeakerInvitesForm(ModelForm):
         exclude = ('claim_token',)
         field_args = {
             'invited_email': {
-                'label': 'Co-Presenter\'s Email'
+                'label': 'Co-Presenter\'s Email',
+                'validators': (Email(),),
             },
         }
 
