@@ -1,5 +1,5 @@
 """Talks forms."""
-from wtforms import FieldList, StringField
+from wtforms import FieldList, StringField, SelectField, BooleanField
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from flask_wtf import Form
 from wtforms.validators import Optional, Email
@@ -15,6 +15,16 @@ ModelForm = model_form_factory(Form)
 def duration_query_factory():
     """Return available :class:`~pygotha.models.Duration` instances."""
     return Duration.query.filter(Duration.inactive == False)
+
+
+class SpeakerInviteConfirmForm(Form):
+    claim_token = StringField()
+    talk_name = StringField()
+    confirmed = SelectField('Confirmed', [
+        (True, 'Confirmed'),
+        (False, 'Declined')
+    ])
+    recording_release = BooleanField()
 
 
 class SpeakerInvitesForm(ModelForm):

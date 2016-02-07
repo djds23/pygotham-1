@@ -1,0 +1,44 @@
+{% extends 'layouts/base.html' %}
+
+{% import 'macros/forms.html' as wtf %}
+
+{% block title %}Confirm an Invitation - {{ super() }}{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="large-12 columns">
+      <h1>Invitation</h1>
+
+      <form method="POST">
+        {{ form.hidden_tag() }}
+        {{ wtf.form_errors(form, False) }}
+
+        {{ wtf.horizontal_field(form.claim_token, placeholder='y0Ur.Cl41M-T0K3N') }}
+
+        {% if form.talk_name %}
+          {{ wtf.horizontal_field(form.talk_name, readonly=true) }}
+        {% endif %}
+
+        {% if form.confirmation %}
+          {{ wtf.horizontal_field(form.confirmation) }}
+        {% endif %}
+
+        {% if form.recording_release %}
+
+          <small>
+            By submitting your talk proposal, you agree to give permission to
+            Big Apple Py to record, edit, and release audio and/or video of your
+            presentation. If you do not agree to this, please uncheck this box.
+            See <a href="{{ url_for('talks.recording_release') }}">Recording
+              Release</a> for details.
+          </small>
+          {{ wtf.horizontal_field(form.recording_release, placeholder='y0Ur.Cl41M-T0K3N') }}
+        {% endif %}
+
+        <div class="form-actions">
+          <button type="submit" class="button radius">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

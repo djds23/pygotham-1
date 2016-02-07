@@ -133,10 +133,14 @@ direct_to_template(
 )
 
 
-@route(blueprint, '/confirm/',  methods=('GET', 'POST'))
+@route(
+    blueprint,
+    '/confirm/',
+    endpoint='confirm_speaker',
+    methods=('GET', 'POST'))
 def confirm():
-    current_user.email, current_user.id
-
+    form = SpeakerInviteConfirmForm(request.form)
+    return render_template('talks/confirm_speaker.html', form=form)
 
 @route(blueprint, '/schedule/')
 def schedule():
@@ -161,6 +165,7 @@ def get_nav_links():
     links['Speaking'] = {
         # FIXME: CFP should probably be database-backed reST content
         'Call For Proposals': url_for('talks.call_for_proposals'),
+        'Confirm an Invitation': url_for('talks.confirm_speaker'),
     }
     if event.is_call_for_proposals_active:
         links['Speaking']['Submit a Talk'] = url_for('talks.submit')
