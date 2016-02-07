@@ -64,11 +64,12 @@ class Speaker(db.Model):
     user = db.relationship(
         'User', backref=db.backref('speakers', lazy='dynamic'))
 
+    primary = db.Column(db.Boolean, nullable=False)
     recording_release = db.Column(db.Boolean, nullable=True)
-    confirmed_ts = db.Column(ArrowType, nullable=True)
-    declined_ts = db.Column(ArrowType, nullable=True)
+    confirmed_at = db.Column(ArrowType, nullable=True)
+    declined_at = db.Column(ArrowType, nullable=True)
 
-user_talks = db.Table('speakers', Speaker.metadata, autoload=True)
+users_talks = db.Table('speakers', Speaker.metadata, autoload=True)
 
 
 class SpeakerInvite(db.Model):
@@ -145,7 +146,7 @@ class Talk(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     speaking_users = db.relationship(
         'User',
-        secondary=user_talks
+        secondary=users_talks
     )
 
     video_url = db.Column(db.String(255))

@@ -13,18 +13,20 @@ ModelForm = model_form_factory(Form)
 
 
 def duration_query_factory():
-    """Return available :class:`~pygotham.models.Duration` instances."""
+    """Return available :class:`~pygotha.models.Duration` instances."""
     return Duration.query.filter(Duration.inactive == False)
 
 
 class SpeakerInvitesForm(ModelForm):
+
+    """Form for editing :class:`~pygotham.models.SpeakerInvite` instances."""
 
     class Meta:
         model = SpeakerInvite
         exclude = ('claim_token',)
         field_args = {
             'invited_email': {
-                'label': 'Co-Presenter\'s Email',
+                'label': "Co-Presenter's Email",
                 'validators': (Email(),),
             },
         }

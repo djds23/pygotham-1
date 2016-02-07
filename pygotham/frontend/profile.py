@@ -8,7 +8,7 @@ from flask_security import login_required
 
 from pygotham.core import db
 from pygotham.frontend import route
-from pygotham.models import Talk, Volunteer
+from pygotham.models import Speaker, Talk, Volunteer
 
 __all__ = ('blueprint',)
 
@@ -20,7 +20,19 @@ blueprint = Blueprint('profile', __name__, url_prefix='/<event_slug>/profile')
 def dashboard():
     """Return the user's dashboard."""
     # TODO: Optionally, old proposals should be shown in a read-only mode.
-    talks = Talk.query.current.filter(Talk.user == current_user)
+    talks = db.session.query(
+        Talk,
+        Speaker,
+    ).join(
+        'speakers'
+    ).filter(
+        Speaker.user == current_user
+    ).filter(
+        Speaker.declined_at is None
+    ).filter(
+        Talk.event == g.current_event
+    ).all()
+
     return render_template(
         'profile/dashboard.html', talks=talks)
 

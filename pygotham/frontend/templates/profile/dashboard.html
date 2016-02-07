@@ -6,7 +6,7 @@
   <div class="row">
     <div class="large-12 columns">
       <h2>Your Proposals</h2>
-      {% if talks.count() %}
+      {% if talks|length > 0 %}
         <table class="proposals">
           <thead>
             <tr>
@@ -16,7 +16,10 @@
             </tr>
           </thead>
           <tbody>
-            {% for talk in talks %}
+            {% for talk_speaker in talks %}
+              {% set talk = talk_speaker[0] %}
+              {% set speaker = talk_speaker[1] %}
+
               <tr>
                 <td>
                   {{ talk }}
