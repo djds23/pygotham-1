@@ -76,12 +76,6 @@ class User(db.Model, UserMixin):
         backref=db.backref('users', lazy='dynamic'),
     )
 
-    talks = db.relationship(
-        'Talk',
-        secondary=user_talks,
-        backref=db.backref('users', lazy='dynamic')
-    )
-
     def __str__(self):
         """Return a printable representation."""
         return self.name or self.email

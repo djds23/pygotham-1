@@ -144,7 +144,7 @@ class Talk(db.Model):
     )
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    speaking_users = db.relationship(
+    users = db.relationship(
         'User',
         secondary=users_talks
     )
