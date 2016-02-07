@@ -69,8 +69,6 @@ class Speaker(db.Model):
     confirmed_at = db.Column(ArrowType, nullable=True)
     declined_at = db.Column(ArrowType, nullable=True)
 
-users_talks = db.Table('speakers', Speaker.metadata, autoload=True)
-
 
 class SpeakerInvite(db.Model):
 
@@ -146,7 +144,7 @@ class Talk(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     users = db.relationship(
         'User',
-        secondary=users_talks
+        secondary='speakers'
     )
 
     video_url = db.Column(db.String(255))
