@@ -1,20 +1,21 @@
 """Add Speaker and SpeakerInvite tables
 
-Revision ID: 41c35530075
+Revision ID: 23f5e5cea74
 Revises: 9d4ba8cee
-Create Date: 2016-02-07 14:11:16.140293
+Create Date: 2016-02-07 16:06:58.273984
 
 """
 
 # revision identifiers, used by Alembic.
+import sqlalchemy_utils
+
 from pygotham.talks.models import Speaker
 
-revision = '41c35530075'
+revision = '23f5e5cea74'
 down_revision = '9d4ba8cee'
 
 from alembic import op
 import sqlalchemy as sa
-import sqlalchemy_utils
 
 
 def upgrade():
@@ -22,7 +23,6 @@ def upgrade():
     op.create_table('speaker_invites',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('talk_id', sa.Integer(), nullable=False),
-    sa.Column('claim_token', sa.String(length=255), nullable=False),
     sa.Column('invited_email', sa.String(length=255), nullable=False),
     sa.ForeignKeyConstraint(['talk_id'], ['talks.id'], name=op.f('speaker_invites_talk_id_fkey')),
     sa.PrimaryKeyConstraint('id', name=op.f('speaker_invites_pkey'))

@@ -3,18 +3,23 @@
 from collections import defaultdict
 
 from flask import (abort, Blueprint, g, flash, redirect, render_template,
-                   url_for)
+                   url_for, request)
 from flask_login import current_user
 from flask_security import login_required
+from itsdangerous import URLSafeTimedSerializer
 
 from pygotham.core import db
 from pygotham.frontend import direct_to_template, route
 from pygotham.models import Day, Speaker, Talk
+from pygotham.settings import SECRET_KEY
+from pygotham.talks.forms import SpeakerInviteConfirmForm
 from pygotham.talks.models import SpeakerInvite
 
 __all__ = ('blueprint', 'get_nav_links')
 
 blueprint = Blueprint('talks', __name__, url_prefix='/<event_slug>/talks')
+
+serializer = URLSafeTimedSerializer(SECRET_KEY)
 
 direct_to_template(
     blueprint,
@@ -126,6 +131,11 @@ direct_to_template(
     template='talks/recording-release.html',
     endpoint='recording_release',
 )
+
+
+@route(blueprint, '/confirm/',  methods=('GET', 'POST'))
+def confirm():
+    current_user.email, current_user.id
 
 
 @route(blueprint, '/schedule/')

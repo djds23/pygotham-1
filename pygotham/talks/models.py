@@ -85,14 +85,7 @@ class SpeakerInvite(db.Model):
         'Talk', backref=db.backref('speaker_invites', lazy='dynamic'),
     )
 
-    claim_token = db.Column(db.String(255), nullable=False)
     invited_email = db.Column(db.String(255), nullable=False)
-
-
-@event.listens_for(SpeakerInvite, 'before_insert')
-def set_claim_token(mapper, connection, target):
-    if target.claim_token is None:
-        target.claim_token = str(uuid4())
 
 
 class Talk(db.Model):

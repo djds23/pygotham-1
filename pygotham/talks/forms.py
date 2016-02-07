@@ -1,5 +1,5 @@
 """Talks forms."""
-from wtforms import FieldList
+from wtforms import FieldList, StringField
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from flask_wtf import Form
 from wtforms.validators import Optional, Email
@@ -23,7 +23,6 @@ class SpeakerInvitesForm(ModelForm):
 
     class Meta:
         model = SpeakerInvite
-        exclude = ('claim_token',)
         field_args = {
             'invited_email': {
                 'label': "Co-Presenter's Email",
