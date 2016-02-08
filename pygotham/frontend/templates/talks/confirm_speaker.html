@@ -19,8 +19,8 @@
           {{ wtf.horizontal_field(form.talk_name, readonly=true) }}
         {% endif %}
 
-        {% if form.confirmation %}
-          {{ wtf.horizontal_field(form.confirmation) }}
+        {% if form.confirmed %}
+          {{ wtf.horizontal_field(form.confirmed, placeholder='Confirmed') }}
         {% endif %}
 
         {% if form.recording_release %}

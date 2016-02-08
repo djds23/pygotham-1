@@ -20,9 +20,9 @@ def duration_query_factory():
 class SpeakerInviteConfirmForm(Form):
     claim_token = StringField()
     talk_name = StringField()
-    confirmed = SelectField('Confirmed', [
+    confirmed = SelectField('Confirmed', choices=[
         (True, 'Confirmed'),
-        (False, 'Declined')
+        (False, 'Declined'),
     ])
     recording_release = BooleanField()
 
