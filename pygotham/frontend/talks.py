@@ -1,17 +1,16 @@
 """PyGotham talks."""
 
 from collections import defaultdict
+from datetime import datetime
 
 from flask import (abort, Blueprint, g, flash, redirect, render_template,
                    url_for, request)
 from flask_login import current_user
 from flask_security import login_required
-from itsdangerous import URLSafeTimedSerializer
 
 from pygotham.core import db
 from pygotham.frontend import direct_to_template, route
 from pygotham.models import Day, Speaker, Talk
-from pygotham.settings import SECRET_KEY
 from pygotham.talks.forms import SpeakerInviteConfirmForm
 from pygotham.talks.models import SpeakerInvite
 
@@ -19,7 +18,6 @@ __all__ = ('blueprint', 'get_nav_links')
 
 blueprint = Blueprint('talks', __name__, url_prefix='/<event_slug>/talks')
 
-serializer = URLSafeTimedSerializer(SECRET_KEY)
 
 direct_to_template(
     blueprint,
@@ -103,18 +101,20 @@ def proposal(pk=None):
 
     if form.validate_on_submit():
         form.populate_obj(talk)
+
         speaker = Speaker(
             user=current_user,
             talk=talk,
             primary=True,
+            confirmed_at=datetime.now(),
+            recording_release=form.recording_release.data
         )
+
         db.session.add(talk)
         db.session.add(speaker)
 
         for invite_form in form.speaker_invites:
-            if invite_form.validate(invite_form):
-                speaker_invite = SpeakerInvite(talk=talk, **invite_form.data)
-                db.session.add(speaker_invite)
+            invite_form.validate(invite_form)
 
         db.session.commit()
 
@@ -140,7 +140,32 @@ direct_to_template(
     methods=('GET', 'POST'))
 def confirm():
     form = SpeakerInviteConfirmForm(request.form)
+    if request.method == 'POST' and form.validate():
+        speaker = Speaker(
+            user=current_user,
+            talk=form.speaker_invite.talk,
+            primary=False,
+            recording_release=form.recording_release.data,
+        )
+
+        if form.confirmed.data:
+            speaker.confirmed_at = datetime.now()
+        else:
+            speaker.declined_at = datetime.now()
+
+        db.session.add(speaker)
+        db.session.commit()
+
+        flash(
+            'You have accepted a speaker invite for the talk "{}".'.format(
+                form.speaker_invite.talk.name
+            ),
+            'success'
+        )
+
+        return redirect(url_for('profile.dashboard'))
     return render_template('talks/confirm_speaker.html', form=form)
+
 
 @route(blueprint, '/schedule/')
 def schedule():

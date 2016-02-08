@@ -1,10 +1,12 @@
 """Talks forms."""
-from wtforms import FieldList, StringField, SelectField, BooleanField
+from itsdangerous import BadData, URLSafeTimedSerializer
+from wtforms import FieldList, StringField, BooleanField
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from flask_wtf import Form
-from wtforms.validators import Optional, Email
+from wtforms.validators import DataRequired, Email, Optional, ValidationError
 from wtforms_alchemy import model_form_factory, ModelFormField
 
+from pygotham.settings import SECRET_KEY
 from pygotham.talks.models import Duration, SpeakerInvite, Talk
 
 __all__ = ('TalkSubmissionForm',)
@@ -18,13 +20,34 @@ def duration_query_factory():
 
 
 class SpeakerInviteConfirmForm(Form):
+
+    """ form for claiming a SpeakerInvite, and creating a Speaker"""
+
+    speaker_invite = None
     claim_token = StringField()
     talk_name = StringField()
-    confirmed = SelectField('Confirmed', choices=[
-        (True, 'Confirmed'),
-        (False, 'Declined'),
-    ])
-    recording_release = BooleanField()
+    recording_release = BooleanField(validators=(DataRequired(),))
+
+    def validate_claim_token(self, field):
+        serializer = URLSafeTimedSerializer(SECRET_KEY)
+        try:
+            invite_id, _ = serializer.loads(field.data)
+        except BadData as e:
+            raise ValidationError(
+                "Claim code is not associated with an invite"
+            )
+
+        speaker_invite = SpeakerInvite.query.filter(
+            SpeakerInvite.id == invite_id
+        ).first()
+
+        if speaker_invite is None:
+            raise ValidationError(
+                "Claim code is not associated with an invite"
+            )
+
+        self.talk_name.data = speaker_invite.talk.name
+        self.speaker_invite = speaker_invite
 
 
 class SpeakerInvitesForm(ModelForm):
@@ -92,5 +115,6 @@ class TalkSubmissionForm(ModelForm):
 
     speaker_invites = FieldList(
         ModelFormField(SpeakerInvitesForm),
-        min_entries=1
+        min_entries=1,
+        validators=(Optional,),
     )
