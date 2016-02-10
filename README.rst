@@ -1,6 +1,6 @@
-=============
-PyGotham 2015
-=============
+========
+PyGotham
+========
 
 .. image:: https://badge.waffle.io/pygotham/pygotham.png?label=ready&title=Ready
    :target: https://waffle.io/pygotham/pygotham
@@ -10,10 +10,6 @@ PyGotham 2015
    :target: https://requires.io/github/PyGotham/pygotham/requirements/?branch=master
    :alt: Requirements Status
 
-.. image:: https://badges.gitter.im/PyGotham/pygotham.svg
-   :alt: Join the chat at https://gitter.im/PyGotham/pygotham
-   :target: https://gitter.im/PyGotham/pygotham?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
-
 Requirements
 ============
 
@@ -21,7 +17,7 @@ Requirements
 
 or
 
-- Python 3.4
+- Python 3.5
 - PostgreSQL_
 
 Getting started
@@ -39,7 +35,7 @@ closed this repository::
 Alternate setup
 ---------------
 
-If you choose not to use Docker, you'll need access to Python 3.4 and
+If you choose not to use Docker, you'll need access to Python 3.5 and
 PostgreSQL.
 
 The easiest way to manage multiple versions of Python is with pyenv_. A
@@ -47,11 +43,15 @@ The easiest way to manage multiple versions of Python is with pyenv_. A
 correct version is always used with the project. Just make sure you install the
 appropriate version::
 
-    $ pyenv install 3.4.3
+    $ pyenv install 3.5.1
 
 We recommend using a virtual environment to install PyGotham's dependencies. The
 easiest way to manage your virtual environments is with virtualenvwrapper_. If
 you are using pyenv, you'll want to install pyenv-virtualenvwrapper_.
+
+You'll also need to install the project's requirements::
+
+    $ python -m pip install -r dev-requirements.txt
 
 Project configuration
 =====================
@@ -106,18 +106,25 @@ Running the site locally
 
 Now you're ready to start your PyGotham server::
 
-    python wsgi.py
+    $ python wsgi.py
 
 You should see the PyGotham site at::
 
     http://0.0.0.0:5000/<slug>/
 
-where ``<slug>>`` is the slug of the event created by the ``create_event``
+where ``<slug>`` is the slug of the event created by the ``create_event``
 management command.
 
 .. note:: If you're using Docker, Compose will take care of running the site
    for you.
 
+Adding requirements
+===================
+
+New requirements should be added to ``requirements.in``. An updated
+``requirements.txt`` can be generated using::
+
+    $ pip-compile requirements.in
 
 .. _Docker: https://www.docker.com/
 .. _Docker Compose: https://docs.docker.com/compose/
